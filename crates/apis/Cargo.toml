@@ -14,8 +14,10 @@ console = []
 random = ["dep:fastrand"]
 stream_io = []
 text_encoding = []
+fl = []
 
 [dependencies]
 anyhow = { workspace = true }
 fastrand = { version = "1.9.0", optional = true }
 javy = { workspace = true }
+fl-wasm-rs = { path = "../../../funless/fl-wasm/rust/fl-wasm-rs", version = "0.1.0" }
