@@ -1,3 +1,4 @@
+use fl_wasm_rs::prelude;
 use javy::Runtime;
 use once_cell::sync::OnceCell;
 use std::io::{self, Read};
@@ -13,6 +14,7 @@ const FUNCTION_MODULE_NAME: &str = "function.mjs";
 
 static mut RUNTIME: OnceCell<Runtime> = OnceCell::new();
 static mut BYTECODE: OnceCell<Vec<u8>> = OnceCell::new();
+static mut SCRIPT: OnceCell<String> = OnceCell::new();
 
 #[export_name = "wizer.initialize"]
 pub extern "C" fn init() {
@@ -26,6 +28,7 @@ pub extern "C" fn init() {
         .unwrap();
 
     unsafe {
+        SCRIPT.set(contents).unwrap();
         RUNTIME.set(runtime).unwrap();
         BYTECODE.set(bytecode).unwrap();
     }
@@ -74,4 +77,60 @@ pub unsafe extern "C" fn invoke(fn_name_ptr: *mut u8, fn_name_size: usize) {
     let js_fn_name = str::from_utf8_unchecked(slice::from_raw_parts(fn_name_ptr, fn_name_size));
     let runtime = unsafe { RUNTIME.take().unwrap() };
     execution::invoke_function(&runtime, FUNCTION_MODULE_NAME, js_fn_name);
+}
+
+#[no_mangle]
+#[export_name = "__invoke"]
+#[cfg(target_arch = "wasm32")]
+pub extern "C" fn __invoke(req_len: i32) -> i32 {
+    let runtime = unsafe { RUNTIME.take().unwrap() };
+    let script = unsafe { SCRIPT.take().unwrap() };
+    let fn_name = "fl_main";
+
+    let context = runtime.context();
+
+    let _ = context.eval_global("function.mjs", &script).unwrap();
+    let global = context.global_object().unwrap();
+    let fun = global.get_property(fn_name).unwrap();
+
+    if !fun.is_null_or_undefined() || !fun.is_function() {
+        let input_data = prelude::get_input_data(req_len);
+        let input_string = match str::from_utf8(&input_data) {
+            Ok(v) => String::from(v),
+            Err(e) => panic!("Invalid UTF-8 sequence in input: {}", e),
+        };
+        let js_input = javy::json::transcode_input(context, input_string.as_bytes()).unwrap();
+        let result = fun
+            .call(&global, &[js_input])
+            .and_then(|_| context.execute_pending());
+
+        let global = context.global_object().unwrap();
+
+        match result {
+            Ok(()) => {
+                let return_value = global.get_property("__fl_global_return_value").unwrap();
+                let error_value = global.get_property("__fl_global_error_value").unwrap();
+
+                if error_value.is_null_or_undefined() {
+                    let transcoded = javy::json::transcode_output(return_value).unwrap();
+                    let resp = str::from_utf8(&transcoded).unwrap();
+                    prelude::insert_response(resp);
+                    0
+                } else {
+                    let transcoded = javy::json::transcode_output(error_value).unwrap();
+                    let errmsg = str::from_utf8(&transcoded).unwrap();
+                    prelude::insert_error(errmsg);
+                    1
+                }
+            }
+            Err(e) => {
+                let errmsg = e.to_string();
+                prelude::insert_error(&errmsg);
+                1
+            }
+        }
+    } else {
+        prelude::insert_error("function fl_main was not defined");
+        1
+    }
 }

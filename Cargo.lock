@@ -862,6 +862,59 @@ dependencies = [
 ]
 
 [[package]]
+name = "fl-js"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "fl-wasm-rs 0.1.1",
+ "javy",
+ "javy-apis",
+ "once_cell",
+]
+
+[[package]]
+name = "fl-wasm-rs"
+version = "0.1.0"
+dependencies = [
+ "cfg-if",
+ "fl-wasm-rs-macros 0.1.0",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "fl-wasm-rs"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da23d938edca424e6ce4bcbe055d44d34849920bf481155e4ef6981f4a512bbf"
+dependencies = [
+ "cfg-if",
+ "fl-wasm-rs-macros 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "fl-wasm-rs-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
+name = "fl-wasm-rs-macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92dc88fadd95d320929f39e6d7091cff1451975d9daa4162c8e0991e838eb61b"
+dependencies = [
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1330,6 +1383,7 @@ version = "1.1.0-alpha.1"
 dependencies = [
  "anyhow",
  "fastrand",
+ "fl-wasm-rs 0.1.0",
  "javy",
 ]
 
@@ -1358,16 +1412,6 @@ dependencies = [
  "wasmtime-wasi",
  "wit-parser 0.8.0",
  "wizer",
-]
-
-[[package]]
-name = "javy-core"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "javy",
- "javy-apis",
- "once_cell",
 ]
 
 [[package]]
@@ -2314,9 +2358,9 @@ checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
 name = "serde"
-version = "1.0.136"
+version = "1.0.168"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce31e24b01e1e524df96f1c2fdd054405f8d7376249a5110886fb4b658484789"
+checksum = "d614f89548720367ded108b3c843be93f3a341e22d5674ca0dd5cd57f34926af"
 dependencies = [
  "serde_derive",
 ]
@@ -2351,20 +2395,20 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.136"
+version = "1.0.168"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08597e7152fcd306f41838ed3e37be9eaeed2b61c42e2117266a554fab4662f9"
+checksum = "d4fe589678c688e44177da4f27152ee2d190757271dc7f1d5b6b9f68d869d641"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.22",
 ]
 
 [[package]]
 name = "serde_json"
-version = "1.0.79"
+version = "1.0.103"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e8d9fa5c3b304765ce1fd9c4c8a3de2c8db365a5b91be52f186efc675681d95"
+checksum = "d03b412469450d4404fe8499a268edd7f8b79fecb074b0d812ad64ca21f4031b"
 dependencies = [
  "itoa 1.0.4",
  "ryu",

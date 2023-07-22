@@ -1,5 +1,5 @@
 [package]
-name = "javy-core"
+name = "fl-js"
 version = "0.2.0"
 authors.workspace = true
 edition.workspace = true
@@ -15,9 +15,16 @@ crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = { workspace = true }
-javy = { workspace = true }
-javy-apis = { path = "../apis", features = ["console", "text_encoding", "random", "stream_io"] }
+javy = { workspace = true, features = ["json"] }
+javy-apis = { path = "../apis", features = [
+    "console",
+    "text_encoding",
+    "random",
+    "stream_io",
+    "fl",
+] }
 once_cell = { workspace = true }
+fl-wasm-rs = { version = "0.1.1" }
 
 [features]
 experimental_event_loop = []
