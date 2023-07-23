@@ -1,4 +1,4 @@
-function sleep(params) {
+function fl_main(params) {
     let ms = params.duration || 1000;
     return new Promise(resolve => {
         setTimeout(
@@ -12,8 +12,3 @@ function sleep(params) {
             ms)
     })
 }
-
-async function fl_main(params) {
-    await FL.run(sleep, params);
-}
-

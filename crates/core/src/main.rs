@@ -100,7 +100,13 @@ pub extern "C" fn __invoke(req_len: i32) -> i32 {
             Err(e) => panic!("Invalid UTF-8 sequence in input: {}", e),
         };
         let js_input = javy::json::transcode_input(context, input_string.as_bytes()).unwrap();
-        let result = fun
+
+        let source = script + include_str!("./wrap.js");
+        let _ = context.eval_global("run.mjs", &source);
+        let global = context.global_object().unwrap();
+        let runner = global.get_property("__fl_main_run").unwrap();
+
+        let result = runner
             .call(&global, &[js_input])
             .and_then(|_| context.execute_pending());
 

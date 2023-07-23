@@ -1,4 +1,4 @@
-function mult(params) {
+function fl_main(params) {
     const A = params.A;
     const B = params.B;
     const A_rows = A.length;
@@ -22,7 +22,3 @@ function mult(params) {
         "payload": c
     };
 }
-
-async function fl_main(params) {
-    await FL.run(mult, params)
-} 

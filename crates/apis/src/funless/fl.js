@@ -36,14 +36,6 @@
             consoleLog(data) {
                 return __fl_console_log(data)
             }
-        },
-        async run(fn, params) {
-            try {
-                let payload = await Promise.resolve(fn(params))
-                globalThis.__fl_global_return_value = payload
-            } catch (error) {
-                globalThis.__fl_global_error_value = error
-            }
         }
     };
 

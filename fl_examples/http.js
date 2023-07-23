@@ -1,4 +1,4 @@
-function req(data) {
+function fl_main(data) {
     let get_response = FL.HTTP.get("https://dummyjson.com/products/1", { "Content-Type": "application/json" })
     let get = JSON.parse(get_response)
 
@@ -14,8 +14,4 @@ function req(data) {
     let del = JSON.parse(delete_response)
 
     return { "get": get, "post": post, "put": put, "delete": del }
-}
-
-async function fl_main(data) {
-    await FL.run(req, data)
 }
