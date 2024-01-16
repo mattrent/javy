@@ -12,17 +12,35 @@
                 return __fl_http_request("GET", uri, headers, "")
             },
             post(uri, headers, body) {
-                if (headers.constructor != Object || body.constructor != Object) {
-                    throw TypeError("Headers and body must be Objects");
+                let bodyString = ""
+                if (body.constructor != String) {
+                    if (body.constructor == Object) {
+                        bodyString = JSON.stringify(body)
+                    } else {
+                        throw TypeError("Body must be either Object or String")
+                    }
+                } else {
+                    bodyString = body
                 }
-                let bodyString = JSON.stringify(body)
+                if (headers.constructor != Object) {
+                    throw TypeError("Headers must be an Object");
+                }
                 return __fl_http_request("POST", uri, headers, bodyString)
             },
             put(uri, headers, body) {
-                if (headers.constructor != Object || body.constructor != Object) {
-                    throw TypeError("Headers and body must be Objects");
+                let bodyString = ""
+                if (body.constructor != String) {
+                    if (body.constructor == Object) {
+                        bodyString = JSON.stringify(body)
+                    } else {
+                        throw TypeError("Body must be either Object or String")
+                    }
+                } else {
+                    bodyString = body
                 }
-                let bodyString = JSON.stringify(body)
+                if (headers.constructor != Object) {
+                    throw TypeError("Headers must be an Object");
+                }
                 return __fl_http_request("PUT", uri, headers, bodyString)
             },
             delete(uri, headers) {
